@@ -1,0 +1,6 @@
+anthropic==1.2.0
+psutil==7.2.1
+
+# Optional: natural neural voice (JANE_TTS=auto|edge). Without it, Jane falls
+# back to the browser's built-in speech synthesis. Uninstalled is fine.
+# edge-tts==7.0.0

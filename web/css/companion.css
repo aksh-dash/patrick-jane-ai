@@ -1,0 +1,117 @@
+/* The pixel Patrick Jane companion. Motion here is deliberately tiny; the JS
+   already disables movement under prefers-reduced-motion, and this file kills any
+   remaining CSS motion too. Nothing on screen is load-bearing on its own — the
+   speech bubble and #jane-live carry the same message in text. */
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+#jane-pet {
+  position: fixed;
+  left: 0; bottom: 0;
+  width: 100px; height: 158px;
+  z-index: 40;
+  cursor: pointer;
+  will-change: transform;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+#jane-pet.grab { cursor: grabbing; }
+
+#jane-canvas {
+  display: block;
+  width: 100px; height: 158px;
+  /* soft ground shadow so he sits on the floor, not floats over it */
+  filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.55));
+}
+
+/* keyboard focus ring — reachable and obvious, per accessibility */
+#jane-pet:focus-visible { outline: 2px solid var(--red); outline-offset: 4px; border-radius: 6px; }
+
+/* a faint attentive glow while the mic is live — colour is not the only cue
+   (the bubble says "Listening." and #jane-live announces it) */
+#jane-pet.live #jane-canvas {
+  filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.55))
+          drop-shadow(0 0 10px rgba(216, 26, 26, 0.55));
+}
+
+#jane-pet.doze #jane-canvas { opacity: 0.82; }
+
+/* ===== the sofa — where he rests. Built in two layers so he can sink *into*
+   it: a backrest behind him, and a seat + arms in front that hide him waist-down
+   (there is no sitting sprite, so occlusion does the work). ===== */
+#jane-sofa-back {
+  position: fixed;
+  left: 4px; bottom: 0;
+  width: 150px; height: 104px;
+  z-index: 39;                 /* behind him */
+  pointer-events: none;
+  background: linear-gradient(#343436, #262628);
+  border-radius: 18px 18px 0 0;
+  box-shadow: inset 0 4px 0 rgba(255,255,255,0.05);
+}
+#jane-sofa {
+  position: fixed;
+  left: -4px; bottom: 0;
+  width: 166px; height: 66px;
+  z-index: 41;                 /* in front of him → reads as seated */
+  pointer-events: none;
+  background: linear-gradient(#2c2c2e, #202022);
+  border-radius: 12px 12px 4px 4px;
+  box-shadow:
+    inset 0 3px 0 rgba(255,255,255,0.06),
+    inset 0 -9px 13px rgba(0,0,0,0.45),
+    0 6px 10px rgba(0,0,0,0.5);
+}
+/* arm-rests */
+#jane-sofa::before,
+#jane-sofa::after {
+  content: ''; position: absolute; bottom: 0;
+  width: 22px; height: 58px;
+  background: linear-gradient(#38383a, #262628);
+  border-radius: 9px 9px 3px 3px;
+}
+#jane-sofa::before { left: -6px; }
+#jane-sofa::after  { right: -6px; }
+
+/* ===== speech bubble ===== */
+#jane-bubble {
+  position: absolute;
+  left: 78px; bottom: 118px;
+  max-width: 220px;
+  padding: 7px 11px;
+  background: rgba(18, 18, 20, 0.94);
+  border: 1px solid rgba(233, 231, 226, 0.16);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: var(--font-mono, monospace);
+  font-size: 12.5px; line-height: 1.35;
+  letter-spacing: 0.2px;
+  white-space: normal;
+  opacity: 0; transform: translateY(4px) scale(0.98);
+  transition: opacity var(--fast, 240ms) var(--ease), transform var(--fast, 240ms) var(--ease);
+  pointer-events: none;
+}
+#jane-bubble.show { opacity: 1; transform: translateY(0) scale(1); }
+#jane-bubble::after {
+  content: ''; position: absolute; left: 14px; bottom: -6px;
+  width: 10px; height: 10px;
+  background: rgba(18, 18, 20, 0.94);
+  border-right: 1px solid rgba(233, 231, 226, 0.16);
+  border-bottom: 1px solid rgba(233, 231, 226, 0.16);
+  transform: rotate(45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #jane-bubble { transition: none; }
+  #jane-pet { will-change: auto; }
+}
+
+/* narrow screens: keep the bubble on-canvas (sizing stays in JS to avoid
+   distorting the pixel buffer) */
+@media (max-width: 720px) {
+  #jane-bubble { max-width: 168px; }
+}

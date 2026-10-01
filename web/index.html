@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>J.A.N.E.</title>
+<link rel="stylesheet" href="css/main.css" />
+<link rel="stylesheet" href="css/companion.css" />
+</head>
+<body>
+<main id="app" data-state="idle">
+
+  <!-- ===================== TOP: identity · system · clock ===================== -->
+  <header id="top">
+    <div id="brand">J.A.N.E.</div>
+
+    <div id="top-right">
+      <button id="sys" aria-label="Open system">
+        <span id="sys-dot" class="dot"></span>
+        <span class="sys-label">SYSTEM</span>
+        <span id="sys-word">NOMINAL</span>
+      </button>
+      <time id="clock">—</time>
+    </div>
+  </header>
+
+  <!-- ===================== CENTRE: the intelligence core ===================== -->
+  <section id="stage">
+    <div id="core-wrap">
+      <canvas id="core"></canvas>
+    </div>
+
+    <!-- ================= THE DECK: every widget, always on screen ============ -->
+    <!-- Home view shows all eight as small tiles. Say or tap one and it zooms to
+         centre while the rest recede — like opening an app on a phone. -->
+    <div id="deck">
+
+      <!-- 01 · SYSTEM -->
+      <section class="tile" data-widget="system" tabindex="0" aria-label="System">
+        <div class="tile-head"><span class="tile-n">01</span><span class="tile-name">SYSTEM</span></div>
+        <div class="tile-body">
+          <div id="sys-detail-rows"></div>
+          <div id="sys-enc" class="sys-enc">—</div>
+          <div class="sys-net">
+            <div class="sys-net-head">NETWORK</div>
+            <canvas id="sys-netmap" width="480" height="72"></canvas>
+            <div id="sys-net-labels"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 02 · CALENDAR -->
+      <section class="tile" data-widget="calendar" tabindex="0" aria-label="Calendar">
+        <div class="tile-head"><span class="tile-n">02</span><span class="tile-name" id="cal-title">CALENDAR</span></div>
+        <div class="tile-body"><div id="cal-grid"></div></div>
+      </section>
+
+      <!-- 03 · SUBJECT (Red John tracking + optical) -->
+      <section class="tile" data-widget="subject" tabindex="0" aria-label="Subject">
+        <div class="tile-head"><span class="tile-n">03</span><span class="tile-name">SUBJECT</span></div>
+        <div class="tile-body" id="subject-body">
+          <div id="target">
+            <div id="tgt-name">RED JOHN</div>
+            <div id="tgt-status">STANDBY</div>
+            <div id="tgt-place">—</div>
+            <div id="tgt-coords" class="mono">—</div>
+            <div id="tgt-conf-wrap">
+              <div class="tgt-conf-label">CONFIDENCE</div>
+              <div id="tgt-confidence">—</div>
+            </div>
+          </div>
+          <div class="subj-meta">
+            <span class="meta-k">LAST ACTIVITY</span><span class="meta-v mono" id="tgt-since">—</span>
+            <span class="meta-k">SIGNAL</span><span class="meta-v" id="tgt-signal">ACTIVE</span>
+          </div>
+          <div id="rj-optical">
+            <span class="meta-k">OPTICAL</span>
+            <div id="rj-frame">
+              <video id="rj-loop" src="media/redjohn.mp4" loop muted autoplay playsinline
+                     preload="auto" disablepictureinpicture></video>
+              <video id="cam" playsinline muted></video>
+              <div id="rj-status">OPTICAL STANDBY</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 · LEDGER -->
+      <section class="tile" data-widget="ledger" tabindex="0" aria-label="Ledger">
+        <div class="tile-head"><span class="tile-n">04</span><span class="tile-name">LEDGER</span></div>
+        <div class="tile-body">
+          <div id="ledger-list"></div>
+          <input id="ledger-add" placeholder="+ ADD" autocomplete="off" />
+        </div>
+      </section>
+
+      <!-- 05 · TRANSCRIPT -->
+      <section class="tile" data-widget="transcript" tabindex="0" aria-label="Transcript">
+        <div class="tile-head"><span class="tile-n">05</span><span class="tile-name">TRANSCRIPT</span></div>
+        <div class="tile-body"><div id="transcript-log"></div></div>
+      </section>
+
+      <!-- 06 · HEADLINES -->
+      <section class="tile" data-widget="intel" tabindex="0" aria-label="Headlines">
+        <div class="tile-head"><span class="tile-n">06</span><span class="tile-name">HEADLINES</span></div>
+        <div class="tile-body"><div id="ctx-intel-list"></div></div>
+      </section>
+
+      <!-- 07 · WEATHER -->
+      <section class="tile" data-widget="environment" tabindex="0" aria-label="Weather">
+        <div class="tile-head"><span class="tile-n">07</span><span class="tile-name">WEATHER</span></div>
+        <div class="tile-body">
+          <div id="ctx-env-city" class="ctx-city">—</div>
+          <div id="ctx-env-temp" class="ctx-temp">—</div>
+          <div id="ctx-env-cond" class="ctx-cond">—</div>
+          <div id="ctx-env-detail" class="ctx-detail mono">—</div>
+        </div>
+      </section>
+
+      <!-- 08 · LOG -->
+      <section class="tile" data-widget="log" tabindex="0" aria-label="System log">
+        <div class="tile-head"><span class="tile-n">08</span><span class="tile-name">LOG</span></div>
+        <div class="tile-body"><div id="log-list"></div></div>
+      </section>
+
+    </div>
+
+    <!-- Tap the dimmed backdrop to send the open widget home. -->
+    <div id="scrim" aria-hidden="true"></div>
+  </section>
+
+  <!-- ===================== BOTTOM: state · voice · waveform ===================== -->
+  <footer id="voice">
+    <div id="jane-line-wrap">
+      <span id="jane-line-who">J.A.N.E.</span>
+      <span id="jane-line"></span>
+    </div>
+    <canvas id="wave" width="1200" height="72"></canvas>
+    <div id="voice-foot">
+      <span id="state-word">IDLE</span>
+      <button id="mic-toggle" aria-label="Toggle microphone">SPACE / MIC</button>
+    </div>
+    <div id="type-row">
+      <input id="type-input" placeholder="Type — Enter to send, Esc to close" autocomplete="off" />
+    </div>
+  </footer>
+
+</main>
+<div id="notice"></div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

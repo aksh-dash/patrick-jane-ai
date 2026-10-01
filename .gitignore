@@ -1,0 +1,27 @@
+# --- secrets: never commit -------------------------------------------------
+.env
+.env.*
+!.env.example
+
+# --- runtime data: user-specific, regenerated on launch --------------------
+# Includes contacts/ledger/memory JSON and any embedded browser profile
+# (data/app-window/…). None of it belongs in the repo.
+data/
+
+# --- python ----------------------------------------------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# --- fonts (bundled locally, not redistributed) ----------------------------
+web/fonts/*.otf
+web/fonts/*.ttf
+web/fonts/*.woff2
+
+# --- os / editor noise -----------------------------------------------------
+.DS_Store
+Thumbs.db
+*.log
